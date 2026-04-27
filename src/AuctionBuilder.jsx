@@ -3842,55 +3842,138 @@ const SaveTemplateModal = ({ auction, onClose, onSaved }) => {
 
 /* ── Creation Gate ───────────────────────────────────────────────────────── */
 const CreationGate = ({ onSelectType, onFromTemplate, onFromScratch }) => {
-  const [expanded, setExpanded] = useState(null);
   const [showTemplates, setShowTemplates] = useState(false);
+
+  const ParamRow = ({ label, options, selected }) => (
+    <div style={{ display:"flex", alignItems:"center", gap:6, marginTop:6 }}>
+      <span style={{ fontSize:12, color:C.t1, minWidth:85, flexShrink:0 }}>{label}</span>
+      <div style={{ display:"flex", gap:4, flexWrap:"wrap" }}>
+        {options.map(opt => (
+          <span key={opt} style={{
+            fontSize:11, padding:"2px 8px", borderRadius:5, lineHeight:"18px",
+            border: opt===selected ? `2px solid ${C.t1}` : `1px solid ${C.divider}`,
+            color: opt===selected ? C.t1 : C.t2,
+            fontWeight: opt===selected ? 600 : 400,
+          }}>{opt}</span>
+        ))}
+      </div>
+    </div>
+  );
+
+  const IntensityBar = ({ value, color }) => (
+    <div style={{ display:"flex", alignItems:"center", gap:6, marginTop:6 }}>
+      <span style={{ fontSize:12, color:C.t1, minWidth:85, flexShrink:0 }}>Intensity:</span>
+      <div style={{ display:"flex", gap:3 }}>
+        {Array.from({length:15},(_,i) => (
+          <div key={i} style={{ width:13, height:20, borderRadius:4, background: i<value ? color : "#E2E2DC" }}/>
+        ))}
+      </div>
+    </div>
+  );
+
+  const SupplierLegend = () => (
+    <div style={{ display:"flex", flexDirection:"column", gap:4, position:"absolute", right:8, top:8 }}>
+      {["Supplier A","Supplier B","Supplier C"].map(s => (
+        <div key={s} style={{ background:"#fff", border:"1px solid #DDD", borderRadius:20, fontSize:10, padding:"2px 8px", color:C.t2, whiteSpace:"nowrap" }}>{s}</div>
+      ))}
+    </div>
+  );
 
   const TYPE_CARDS = [
     {
       key: "english",
-      label: "English Auction",
-      desc: "Competitive live bidding — suppliers see activity and outbid each other in real time.",
-      typeBg: "#EBFFF7", typeBorder: "#A8F0D8", typeColor: "#1B7A4A",
+      label: "English Reverse",
+      accent: "#00CE7C",
       auction: { type:"simple", biddingMode:"english", archRankVisible: true },
-      icon: (
-        <svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke="#1B7A4A" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
-          <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/>
+      params: { security:"Pre-bid", preference:"None", awarding:"Rank", intensity:10 },
+      chart: (
+        <svg viewBox="0 0 200 72" width="100%" style={{display:"block"}}>
+          <line x1="14" y1="2" x2="14" y2="66" stroke="#CCC" strokeWidth="1"/>
+          <line x1="14" y1="66" x2="196" y2="66" stroke="#CCC" strokeWidth="1"/>
+          {/* Line 1 */}
+          <polyline points="14,8 55,18 100,32 148,52" fill="none" stroke="#555" strokeWidth="1.5"/>
+          {[[14,8],[55,18],[100,32],[148,52]].map(([cx,cy],i)=><circle key={i} cx={cx} cy={cy} r="3.5" fill="none" stroke="#555" strokeWidth="1.5"/>)}
+          <line x1="148" y1="52" x2="183" y2="65" stroke="#222" strokeWidth="1.8"/>
+          <line x1="176" y1="61" x2="183" y2="65" stroke="#222" strokeWidth="1.8"/>
+          <line x1="179" y1="68" x2="183" y2="65" stroke="#222" strokeWidth="1.8"/>
+          {/* Line 2 */}
+          <polyline points="14,22 55,36 100,50 140,60" fill="none" stroke="#555" strokeWidth="1.5"/>
+          {[[14,22],[55,36],[100,50],[140,60]].map(([cx,cy],i)=><circle key={i} cx={cx} cy={cy} r="3.5" fill="none" stroke="#555" strokeWidth="1.5"/>)}
+          <line x1="140" y1="60" x2="190" y2="72" stroke="#222" strokeWidth="1.8"/>
+          <line x1="183" y1="68" x2="190" y2="72" stroke="#222" strokeWidth="1.8"/>
+          <line x1="185" y1="75" x2="190" y2="72" stroke="#222" strokeWidth="1.8"/>
+          {/* Line 3 */}
+          <polyline points="14,34 55,48 100,60 140,66" fill="none" stroke="#999" strokeWidth="1.5"/>
+          {[[14,34],[55,48],[100,60],[140,66]].map(([cx,cy],i)=><circle key={i} cx={cx} cy={cy} r="3.5" fill="none" stroke="#999" strokeWidth="1.5"/>)}
         </svg>
       ),
     },
     {
       key: "dutch",
-      label: "Dutch Auction",
-      desc: "Price increases each round during competitive multi-round bidding.",
-      typeBg: "#F3F2FF", typeBorder: "#C9C7FF", typeColor: "#3D3A90",
+      label: "Dutch eAuction",
+      accent: "#7B6FCA",
       auction: { type:"dynamic", dynamicFormat:"dutch", archPriceDirection:"dutch" },
-      icon: (
-        <svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke="#3D3A90" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
-          <polyline points="22 17 13.5 8.5 8.5 13.5 2 7"/><polyline points="16 17 22 17 22 11"/>
+      params: { security:"Pre-bid", preference:"None", awarding:"Award", intensity:6 },
+      chart: (
+        <svg viewBox="0 0 200 72" width="100%" style={{display:"block"}}>
+          <line x1="14" y1="2" x2="14" y2="66" stroke="#CCC" strokeWidth="1"/>
+          <line x1="14" y1="66" x2="196" y2="66" stroke="#CCC" strokeWidth="1"/>
+          {/* Ascending staircase outline */}
+          <polyline points="14,62 44,62 44,50 78,50 78,38 112,38 112,26 146,26 146,16 180,16" fill="none" stroke="#555" strokeWidth="1.5"/>
+          {/* Fill steps */}
+          <rect x="14" y="62" width="30" height="4" fill="#DDD"/>
+          <rect x="44" y="50" width="34" height="16" fill="#DDD" opacity="0.7"/>
+          <rect x="78" y="38" width="34" height="28" fill="#DDD" opacity="0.5"/>
+          <rect x="112" y="26" width="34" height="40" fill="#DDD" opacity="0.4"/>
+          <rect x="146" y="16" width="34" height="50" fill="#DDD" opacity="0.3"/>
+          {/* Dot on middle step */}
+          <circle cx="95" cy="38" r="5" fill="none" stroke="#555" strokeWidth="1.5"/>
         </svg>
       ),
     },
     {
       key: "japanese",
-      label: "Japanese Auction",
-      desc: "Price decreases each round until a supplier accepts the offer.",
-      typeBg: "#FEFFEA", typeBorder: "#DCF5A0", typeColor: "#4A6010",
+      label: "Japanese eAuction",
+      accent: "#D4900A",
       auction: { type:"dynamic", dynamicFormat:"japanese", archPriceDirection:"japanese" },
-      icon: (
-        <svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke="#4A6010" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
-          <line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/>
+      params: { security:"Pre-bid", preference:"None", awarding:"Award", intensity:8 },
+      chart: (
+        <svg viewBox="0 0 200 72" width="100%" style={{display:"block"}}>
+          <line x1="14" y1="2" x2="14" y2="66" stroke="#CCC" strokeWidth="1"/>
+          <line x1="14" y1="66" x2="196" y2="66" stroke="#CCC" strokeWidth="1"/>
+          {/* Descending staircase outline */}
+          <polyline points="14,14 50,14 50,26 86,26 86,38 122,38 122,50 158,50 158,62 196,62" fill="none" stroke="#555" strokeWidth="1.5"/>
+          {/* Fill steps */}
+          <rect x="14" y="14" width="36" height="52" fill="#DDD" opacity="0.4"/>
+          <rect x="50" y="26" width="36" height="40" fill="#DDD" opacity="0.4"/>
+          <rect x="86" y="38" width="36" height="28" fill="#DDD" opacity="0.4"/>
+          <rect x="122" y="50" width="36" height="16" fill="#DDD" opacity="0.4"/>
+          <rect x="158" y="62" width="38" height="4" fill="#DDD" opacity="0.4"/>
+          {/* Dropout circles */}
+          {[22,32,42].map((cx,i)=><circle key={i} cx={cx} cy={9} r="4" fill="none" stroke="#555" strokeWidth="1.5"/>)}
+          {[58,68,78].map((cx,i)=><circle key={i} cx={cx} cy={21} r="4" fill="none" stroke="#555" strokeWidth="1.5"/>)}
+          {[94,104].map((cx,i)=><circle key={i} cx={cx} cy={33} r="4" fill="none" stroke="#555" strokeWidth="1.5"/>)}
+          <circle cx="130" cy="45" r="4" fill="none" stroke="#555" strokeWidth="1.5"/>
         </svg>
       ),
     },
     {
       key: "sealed",
       label: "Sealed Bid",
-      desc: "Suppliers submit one blind bid without seeing competitors. Best price wins.",
-      typeBg: "#E9F5FF", typeBorder: "#B8DCFA", typeColor: "#1A5080",
+      accent: "#5C6BC0",
       auction: { type:"simple", biddingMode:"sealed" },
-      icon: (
-        <svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke="#1A5080" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
-          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/>
+      params: { security:"No Pre-bid", preference:"None", awarding:"Award", intensity:13 },
+      chart: (
+        <svg viewBox="0 0 200 72" width="100%" style={{display:"block"}}>
+          <line x1="14" y1="2" x2="14" y2="66" stroke="#CCC" strokeWidth="1"/>
+          <line x1="14" y1="66" x2="196" y2="66" stroke="#CCC" strokeWidth="1"/>
+          {/* Bars */}
+          {[
+            {x:22,h:40},{x:42,h:25},{x:68,h:34},{x:88,h:38},{x:114,h:18},{x:134,h:28},{x:160,h:22}
+          ].map(({x,h},i)=>(
+            <rect key={i} x={x} y={66-h} width="14" height={h} fill="none" stroke="#555" strokeWidth="1.5"/>
+          ))}
+          <text x="185" y="74" fontSize="10" fill="#888" fontFamily="sans-serif">Days</text>
         </svg>
       ),
     },
@@ -3901,7 +3984,7 @@ const CreationGate = ({ onSelectType, onFromTemplate, onFromScratch }) => {
     <div style={{ minHeight:"100vh", background:C.bg, display:"flex" }}>
       <DarkSidebar />
       <div style={{ flex:1, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", padding:"48px 24px" }}>
-        <div style={{ width:"100%", maxWidth:820 }}>
+        <div style={{ width:"100%", maxWidth:920 }}>
 
           {/* Header */}
           <div style={{ marginBottom:32 }}>
@@ -3911,49 +3994,39 @@ const CreationGate = ({ onSelectType, onFromTemplate, onFromScratch }) => {
           </div>
 
           {/* Top: Choose Auction Type */}
-          <div className="card" style={{ marginBottom:16, padding:"20px 20px 16px", borderRadius:8 }}>
-            <div style={{ fontSize:11, fontWeight:700, color:C.t2, textTransform:"uppercase", letterSpacing:"0.08em", marginBottom:14 }}>Choose Auction Type</div>
-            <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:12 }}>
-              {TYPE_CARDS.map(tc => {
-                const isExp = expanded === tc.key;
-                return (
-                  <div key={tc.key}
-                    onClick={() => setExpanded(isExp ? null : tc.key)}
-                    style={{ borderRadius:8, border:`1px solid ${isExp ? tc.typeBorder : C.divider}`,
-                      background: isExp ? tc.typeBg : C.surface,
-                      cursor:"pointer", transition:"all .15s",
-                      overflow:"hidden" }}>
-                    <div style={{ padding:"14px 14px 12px", display:"flex", alignItems:"flex-start", gap:10 }}>
-                      <div style={{ width:34, height:34, borderRadius:8,
-                        background: isExp ? `${tc.typeBorder}55` : C.bg,
-                        border:`1px solid ${isExp ? tc.typeBorder : C.divider}`,
-                        display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}>
-                        {tc.icon}
-                      </div>
-                      <div style={{ flex:1, minWidth:0 }}>
-                        <div style={{ fontSize:13, fontWeight:700, color: isExp ? tc.typeColor : C.t1, lineHeight:1.2, marginBottom:2 }}>{tc.label}</div>
-                        {isExp && (
-                          <div style={{ fontSize:12, color:C.t2, lineHeight:1.5, marginTop:4 }}>{tc.desc}</div>
-                        )}
-                      </div>
-                      <div style={{ flexShrink:0, marginTop:2 }}>
-                        {isExp
-                          ? <IcoCheck size={14} color={tc.typeColor} />
-                          : <svg width={12} height={12} viewBox="0 0 24 24" fill="none" stroke={C.t3} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-                        }
-                      </div>
-                    </div>
-                    {isExp && (
-                      <div style={{ padding:"0 14px 14px" }}>
-                        <button className="btn btn-primary btn-sm" style={{ width:"100%" }}
-                          onClick={e => { e.stopPropagation(); onSelectType({ ...INIT, ...tc.auction }); }}>
-                          Start building →
-                        </button>
-                      </div>
-                    )}
+          <div style={{ marginBottom:16 }}>
+            <div style={{ fontSize:11, fontWeight:700, color:C.t2, textTransform:"uppercase", letterSpacing:"0.08em", marginBottom:12 }}>Choose Auction Type</div>
+            <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:14 }}>
+              {TYPE_CARDS.map(tc => (
+                <div key={tc.key}
+                  onClick={() => onSelectType({ ...INIT, ...tc.auction })}
+                  style={{
+                    background:"#fff", borderRadius:10,
+                    border:`1px solid ${C.divider}`,
+                    borderLeft:`4px solid ${tc.accent}`,
+                    cursor:"pointer", overflow:"hidden",
+                    transition:"box-shadow .15s",
+                    boxShadow:"0 1px 4px rgba(0,0,0,0.05)",
+                  }}
+                  onMouseEnter={e=>e.currentTarget.style.boxShadow="0 4px 16px rgba(0,0,0,0.10)"}
+                  onMouseLeave={e=>e.currentTarget.style.boxShadow="0 1px 4px rgba(0,0,0,0.05)"}>
+                  {/* Title */}
+                  <div style={{ padding:"14px 16px 10px", fontSize:17, fontWeight:700, color:C.t1 }}>{tc.label}</div>
+                  {/* Chart */}
+                  <div style={{ position:"relative", background:"#F3F3F1", margin:"0 16px 12px", borderRadius:8, padding:"8px 10px 6px" }}>
+                    <div style={{ fontSize:10, color:C.t2, marginBottom:4 }}>Price (EUR)</div>
+                    {tc.chart}
+                    <SupplierLegend />
                   </div>
-                );
-              })}
+                  {/* Params */}
+                  <div style={{ padding:"0 16px 16px" }}>
+                    <ParamRow label="Security:" options={["Pre-bid","No Pre-bid"]} selected={tc.params.security}/>
+                    <ParamRow label="Preference:" options={["None","Non-Financial","Financial"]} selected={tc.params.preference}/>
+                    <ParamRow label="Awarding:" options={["Award","Rank"]} selected={tc.params.awarding}/>
+                    <IntensityBar value={tc.params.intensity} color={tc.accent}/>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
 
