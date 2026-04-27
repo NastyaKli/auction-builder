@@ -1,0 +1,131 @@
+<h2>Як показати темплейти на першій сторінці?</h2>
+<p class="subtitle">Три підходи — від мінімального до повного</p>
+
+<div class="cards" style="grid-template-columns: 1fr; gap: 20px; max-width: 900px; margin: 0 auto;">
+
+  <!-- Option A -->
+  <div class="card" data-choice="a" onclick="toggleSelect(this)" style="padding: 0; overflow: hidden;">
+    <div class="card-body" style="padding: 16px 20px 12px;">
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:6px;">
+        <div class="letter" style="width:28px;height:28px;font-size:13px;flex-shrink:0;">A</div>
+        <div>
+          <h3 style="margin:0; font-size:15px;">Третя картка на першому екрані</h3>
+          <p style="margin:4px 0 0; font-size:12px; color:#888;">Найменше змін — темплейти поряд з AI Rec і Scratch</p>
+        </div>
+      </div>
+    </div>
+    <div style="background:#f8f8f6; border-top:1px solid #eee; padding:16px 20px;">
+      <!-- Mockup -->
+      <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; font-size:11px;">
+        <div style="background:#fff; border:2px solid #00CE7C; border-radius:6px; padding:12px; min-height:80px;">
+          <div style="color:#00CE7C; font-weight:700; font-size:10px; text-transform:uppercase; margin-bottom:4px;">⭐ AI Recommendation</div>
+          <div style="font-weight:600; font-size:13px; color:#111;">English Reverse</div>
+          <div style="color:#888; font-size:10px; margin-top:2px;">86% match</div>
+        </div>
+        <div style="background:#fff; border:1px solid #e8e8e5; border-radius:6px; padding:12px; min-height:80px;">
+          <div style="color:#888; font-size:10px; text-transform:uppercase; margin-bottom:4px;">📋 Templates</div>
+          <div style="font-size:11px; color:#555; display:flex; flex-direction:column; gap:4px; margin-top:6px;">
+            <div style="background:#f5f5f3; border-radius:3px; padding:4px 7px;">IT Hardware RFQ</div>
+            <div style="background:#f5f5f3; border-radius:3px; padding:4px 7px;">Services Framework</div>
+            <div style="background:#f5f5f3; border-radius:3px; padding:4px 7px;">+ 5 more...</div>
+          </div>
+        </div>
+        <div style="background:#fff; border:1px solid #e8e8e5; border-radius:6px; padding:12px; min-height:80px;">
+          <div style="color:#888; font-size:10px; text-transform:uppercase; margin-bottom:4px;">⚙️ From Scratch</div>
+          <div style="font-size:11px; color:#555; margin-top:6px;">Повний контроль над кожним параметром</div>
+        </div>
+      </div>
+      <div style="margin-top:8px; font-size:11px; color:#888;">✓ Проста зміна &nbsp;·&nbsp; ✗ Мало місця для темплейтів &nbsp;·&nbsp; ✗ 3 колонки може бути тісно</div>
+    </div>
+  </div>
+
+  <!-- Option B -->
+  <div class="card" data-choice="b" onclick="toggleSelect(this)" style="padding: 0; overflow: hidden;">
+    <div class="card-body" style="padding: 16px 20px 12px;">
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:6px;">
+        <div class="letter" style="width:28px;height:28px;font-size:13px;flex-shrink:0;">B</div>
+        <div>
+          <h3 style="margin:0; font-size:15px;">Галерея темплейтів як окрема секція</h3>
+          <p style="margin:4px 0 0; font-size:12px; color:#888;">Під AI Rec і Scratch — горизонтальний скрол карток</p>
+        </div>
+      </div>
+    </div>
+    <div style="background:#f8f8f6; border-top:1px solid #eee; padding:16px 20px;">
+      <div style="font-size:11px; display:flex; flex-direction:column; gap:8px;">
+        <!-- Top row -->
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+          <div style="background:#fff; border:2px solid #00CE7C; border-radius:6px; padding:10px;">
+            <div style="color:#00CE7C; font-weight:700; font-size:10px;">⭐ AI Recommendation</div>
+            <div style="font-weight:600; color:#111;">English Reverse · 86%</div>
+          </div>
+          <div style="background:#fff; border:1px solid #e8e8e5; border-radius:6px; padding:10px;">
+            <div style="color:#888; font-size:10px;">⚙️ From Scratch</div>
+            <div style="color:#555;">Повний контроль</div>
+          </div>
+        </div>
+        <!-- Divider -->
+        <div style="display:flex; align-items:center; gap:8px; margin:4px 0;">
+          <div style="flex:1; height:1px; background:#eee;"></div>
+          <div style="font-size:10px; color:#aaa; text-transform:uppercase; letter-spacing:0.05em;">або почни з темплейту</div>
+          <div style="flex:1; height:1px; background:#eee;"></div>
+        </div>
+        <!-- Template row -->
+        <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:8px;">
+          <div style="background:#fff; border:1px solid #e8e8e5; border-radius:5px; padding:8px 10px;">
+            <div style="font-size:9px; color:#aaa; text-transform:uppercase;">Procurement</div>
+            <div style="font-size:11px; font-weight:600; color:#333; margin-top:2px;">IT Hardware</div>
+            <div style="font-size:9px; color:#888; margin-top:2px;">Dutch · 3 lots</div>
+          </div>
+          <div style="background:#fff; border:1px solid #e8e8e5; border-radius:5px; padding:8px 10px;">
+            <div style="font-size:9px; color:#aaa; text-transform:uppercase;">Services</div>
+            <div style="font-size:11px; font-weight:600; color:#333; margin-top:2px;">Consulting RFQ</div>
+            <div style="font-size:9px; color:#888; margin-top:2px;">Sealed · 1 lot</div>
+          </div>
+          <div style="background:#fff; border:1px solid #e8e8e5; border-radius:5px; padding:8px 10px;">
+            <div style="font-size:9px; color:#aaa; text-transform:uppercase;">My templates</div>
+            <div style="font-size:11px; font-weight:600; color:#333; margin-top:2px;">Annual Goods</div>
+            <div style="font-size:9px; color:#888; margin-top:2px;">English · 5 lots</div>
+          </div>
+          <div style="background:#fff; border:1px solid #e8e8e5; border-radius:5px; padding:8px 10px; display:flex; align-items:center; justify-content:center; color:#aaa; font-size:11px;">
+            → Всі (12)
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:8px; font-size:11px; color:#888;">✓ Більше місця &nbsp;·&nbsp; ✓ Розмежування типів &nbsp;·&nbsp; ✓ "My templates" в тому ж рядку</div>
+    </div>
+  </div>
+
+  <!-- Option C -->
+  <div class="card" data-choice="c" onclick="toggleSelect(this)" style="padding: 0; overflow: hidden;">
+    <div class="card-body" style="padding: 16px 20px 12px;">
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:6px;">
+        <div class="letter" style="width:28px;height:28px;font-size:13px;flex-shrink:0;">C</div>
+        <div>
+          <h3 style="margin:0; font-size:15px;">Повноцінна стартова сторінка з табами</h3>
+          <p style="margin:4px 0 0; font-size:12px; color:#888;">Таби: AI Recommendation · Templates · From Scratch</p>
+        </div>
+      </div>
+    </div>
+    <div style="background:#f8f8f6; border-top:1px solid #eee; padding:16px 20px;">
+      <div style="font-size:11px;">
+        <!-- Tabs -->
+        <div style="display:flex; gap:0; border-bottom:2px solid #eee; margin-bottom:12px;">
+          <div style="padding:6px 14px; border-bottom:2px solid #00CE7C; margin-bottom:-2px; font-weight:600; font-size:11px; color:#00CE7C;">⭐ AI Рекомендація</div>
+          <div style="padding:6px 14px; color:#888; font-size:11px;">📋 Темплейти</div>
+          <div style="padding:6px 14px; color:#888; font-size:11px;">⚙️ З нуля</div>
+        </div>
+        <!-- Tab content preview -->
+        <div style="background:#fff; border:1px solid #eee; border-radius:6px; padding:12px;">
+          <div style="font-size:10px; color:#aaa; margin-bottom:6px;">Активний таб → показує або AI рекомендацію або галерею темплейтів або builder</div>
+          <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:6px;">
+            <div style="background:#f5f5f3; border-radius:4px; padding:8px; text-align:center; color:#888; font-size:10px;">Системні<br/>темплейти</div>
+            <div style="background:#f5f5f3; border-radius:4px; padding:8px; text-align:center; color:#888; font-size:10px;">Мої<br/>темплейти</div>
+            <div style="background:#f5f5f3; border-radius:4px; padding:8px; text-align:center; color:#888; font-size:10px;">Командні<br/>темплейти</div>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:8px; font-size:11px; color:#888;">✓ Найбільше місця &nbsp;·&nbsp; ✓ Чіткий розподіл &nbsp;·&nbsp; ✗ Більше кліків для нових юзерів</div>
+    </div>
+  </div>
+
+</div>

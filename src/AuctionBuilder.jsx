@@ -396,6 +396,48 @@ const INIT = {
   defaultCommercialTerms: "", defaultGeneralTerms: "",
 };
 
+/* ── Template storage ────────────────────────────────────────────────────── */
+const TEMPLATES_KEY = "crown_auction_templates";
+
+const loadTemplates = () => {
+  try { return JSON.parse(localStorage.getItem(TEMPLATES_KEY) || "[]"); } catch { return []; }
+};
+const saveTemplates = (tpls) => {
+  try { localStorage.setItem(TEMPLATES_KEY, JSON.stringify(tpls)); } catch {}
+};
+const deleteTemplate = (id) => saveTemplates(loadTemplates().filter(t => t.id !== id));
+
+const SYSTEM_TEMPLATES = [
+  {
+    id: "sys-english-it",
+    name: "IT Hardware Procurement",
+    category: "system",
+    auctionType: "English Auction",
+    typeBg: "#EBFFF7", typeBorder: "#A8F0D8", typeColor: "#1B7A4A",
+    lots: 2, description: "Reverse English auction for hardware goods with rank visibility",
+    auction: { ...INIT, type:"simple", biddingMode:"english", archRankVisible:true, archRankMode:"All Rank",
+      lots:[mkLot(1),mkLot(2)] }
+  },
+  {
+    id: "sys-sealed-consulting",
+    name: "Consulting Services RFQ",
+    category: "system",
+    auctionType: "Sealed Bid",
+    typeBg: "#E9F5FF", typeBorder: "#B8DCFA", typeColor: "#1A5080",
+    lots: 1, description: "One-round sealed bid for professional services",
+    auction: { ...INIT, type:"simple", biddingMode:"sealed", lots:[mkLot(1)] }
+  },
+  {
+    id: "sys-dutch-goods",
+    name: "Goods Procurement",
+    category: "system",
+    auctionType: "Dutch Auction",
+    typeBg: "#F3F2FF", typeBorder: "#C9C7FF", typeColor: "#3D3A90",
+    lots: 3, description: "Multi-round Dutch auction for goods with price adjustments",
+    auction: { ...INIT, type:"dynamic", dynamicFormat:"dutch", archPriceAdjustments:true, archPriceDirection:"dutch",
+      lots:[mkLot(1),mkLot(2),mkLot(3)] }
+  },
+];
 
 /* ── Extra icons ─────────────────────────────────────────────────────────── */
 const IcoPencil = ({ size = 14 }) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={C.t2} strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>;
@@ -875,7 +917,7 @@ const SecArchitecture = ({ auction, update }) => {
 
       {/* ── Round Structure Selection ── */}
       <Card style={{ marginBottom: 16 }}>
-        <div style={{ fontSize: 12, fontWeight: 600, color: C.t2, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 12 }}>Round Structure</div>
+        <div style={{ fontSize: 12, fontWeight: 500, color: C.t2, textTransform: "uppercase", letterSpacing: "0.07em", marginBottom: 12 }}>Round Structure</div>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
           {[
             {
@@ -934,7 +976,7 @@ const SecArchitecture = ({ auction, update }) => {
         <div className="fade" style={{ display: "grid", gridTemplateColumns: "1fr 320px", gap: 16, alignItems: "start" }}>
           {/* LEFT — Configuration Toggles */}
           <Card>
-            <div style={{ fontSize: 12, fontWeight: 600, color: C.t2, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 4 }}>Configuration</div>
+            <div style={{ fontSize: 12, fontWeight: 500, color: C.t2, textTransform: "uppercase", letterSpacing: "0.07em", marginBottom: 4 }}>Configuration</div>
 
             {/* Price Direction — only Multi-Round */}
             {isMulti && (
@@ -1025,7 +1067,7 @@ const SecArchitecture = ({ auction, update }) => {
             const badgeColor = isD ? "#3D3A90" : isJ ? "#4A6010" : isS ? "#1A5080" : isE ? "#1B7A4A" : C.t2;
             return (
           <Card style={{ background: cardBg, border: `1px solid ${C.divider}`, position: "sticky", top: 80 }}>
-            <div style={{ fontSize: 10, fontWeight: 700, color: C.t2, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 12 }}>Determined Auction Type</div>
+            <div style={{ fontSize: 12, fontWeight: 500, color: C.t2, textTransform: "uppercase", letterSpacing: "0.07em", marginBottom: 12 }}>Determined Auction Type</div>
 
             {resolved ? (
               <div>
@@ -1042,7 +1084,7 @@ const SecArchitecture = ({ auction, update }) => {
 
                 <div style={{ fontSize: 13, color: C.t2, lineHeight: 1.6, marginBottom: 16 }}>{resolved.desc}</div>
 
-                <div style={{ fontSize: 12, fontWeight: 600, color: C.t2, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 8 }}>Key Characteristics</div>
+                <div style={{ fontSize: 12, fontWeight: 500, color: C.t2, textTransform: "uppercase", letterSpacing: "0.07em", marginBottom: 8 }}>Key Characteristics</div>
                 <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
                   {[
                     isMulti ? "Multiple bidding rounds" : "Single bidding round",
@@ -1855,8 +1897,8 @@ const LotPreview = ({ lot, auction, sidebar }) => {
       <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke={C.t3} strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
         <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
       </svg>
-      <span style={{ fontSize:12, fontWeight:600, color:C.t2, textTransform:"uppercase", letterSpacing:"0.1em" }}>{label}</span>
-      {right && <span style={{ fontSize:12, fontWeight:600, color:C.t1, marginLeft:"auto" }}>{right}</span>}
+      <span style={{ fontSize:12, fontWeight:500, color:C.t2, textTransform:"uppercase", letterSpacing:"0.07em" }}>{label}</span>
+      {right && <span style={{ fontSize:12, fontWeight:500, color:C.t1, marginLeft:"auto" }}>{right}</span>}
     </div>
   );
 
@@ -2263,7 +2305,7 @@ const SecLots = ({ auction, update }) => {
                     padding:"10px 20px",cursor:"pointer",userSelect:"none",background:C.surface }}>
                   <div style={{ display:"flex",alignItems:"center",gap:8 }}>
                     <span style={{ fontSize:13,lineHeight:1 }}>{icon}</span>
-                    <span style={{ fontSize:11,fontWeight:600,textTransform:"uppercase",letterSpacing:".07em",color:C.t2 }}>{label}</span>
+                    <span style={{ fontSize:12,fontWeight:500,textTransform:"uppercase",letterSpacing:".07em",color:C.t2 }}>{label}</span>
                     {badge}
                   </div>
                   <span style={{ color:C.grey300,fontSize:18,lineHeight:1,fontWeight:300 }}>{open?"−":"+"}</span>
@@ -2274,10 +2316,11 @@ const SecLots = ({ auction, update }) => {
           };
 
           const cardStyle = { background:C.surface,border:`1px solid ${C.grey150}`,borderRadius:8,overflow:"hidden" };
-          const cardHead = (icon,label) => (
+          const cardHead = (icon,label,right) => (
             <div style={{ display:"flex",alignItems:"center",gap:8,padding:"10px 20px" }}>
               <span style={{ fontSize:13,lineHeight:1 }}>{icon}</span>
-              <span style={{ fontSize:11,fontWeight:600,textTransform:"uppercase",letterSpacing:".07em",color:C.t2 }}>{label}</span>
+              <span style={{ fontSize:12,fontWeight:500,textTransform:"uppercase",letterSpacing:".07em",color:C.t2 }}>{label}</span>
+              {right && <span style={{ marginLeft:"auto" }}>{right}</span>}
             </div>
           );
           return (
@@ -2704,24 +2747,22 @@ const SecLots = ({ auction, update }) => {
                     {/* Simple auction pricing */}
                     {!isDynamic && (() => {
                       const durMin = toSec(lot.duration||"10 min")/60;
-                      const bp=basePrice, minD=parseFloat(lot.minDec)||0, maxD=parseFloat(lot.maxDec)||0;
-                      const floor=bp>0&&maxD>0?Math.max(0,bp-maxD):0;
+                      const bp=basePrice;
                       const chartSuppliers=auction.suppliers.filter(s=>lot.requiredSuppliers?.includes(s.id));
                       const getSupTotal=(supId)=>(lot.lineItems||[]).reduce((sum,li)=>sum+(parseFloat(li.prices?.[supId])||0)*(parseFloat(li.quantity)||0),0);
                       const suppliersWithTotal=chartSuppliers.filter(s=>getSupTotal(s.id)>0);
                       const hasData=bp>0;
-                      const minSteps=maxD>0&&minD>0?Math.floor(maxD/minD):null;
-                      const maxSteps=maxD>0&&minD>0?Math.ceil(maxD/minD):null;
                       const fmtV=n=>{if(Math.abs(n)>=1000000)return`${(n/1000000).toFixed(1)}M`;if(Math.abs(n)>=1000)return`${(n/1000).toFixed(0)}K`;return Math.round(n).toLocaleString("en-US");};
-                      /* Convert baseline & floor to totals so they're on the same scale as supplier totals */
+                      /* Chart scale: baseline at top, supplier prices below */
                       const totalQtyChart=(lot.lineItems||[]).reduce((s,li)=>s+(parseFloat(li.quantity)||0),0);
                       const bpTotal = bp>0&&totalQtyChart>0 ? bp*totalQtyChart : bp;
-                      const floorTotal = floor>0&&totalQtyChart>0 ? floor*totalQtyChart : floor;
-                      const W=900,H=170,PL=72,PR=20,PT=18,PB=34,iW=W-PL-PR,iH=H-PT-PB;
+                      const W=900,H=230,PL=72,PR=20,PT=22,PB=38,iW=W-PL-PR,iH=H-PT-PB;
                       const allTotals=suppliersWithTotal.map(s=>getSupTotal(s.id));
-                      const topVal=bpTotal>0?Math.max(bpTotal,...(allTotals.length?allTotals:[bpTotal]))*1.04:(allTotals.length?Math.max(...allTotals)*1.05:1000);
-                      const botVal=floorTotal>0?floorTotal*0.95:(bpTotal>0?bpTotal*0.7:topVal*0.7);
-                      const yMax=topVal,yMin=Math.max(0,botVal*0.97),yRange=yMax-yMin||1;
+                      /* top = baseline + 6% headroom; bottom = lowest supplier price - 8%, or baseline*0.7 if no suppliers */
+                      const topVal=bpTotal>0?bpTotal*1.06:1000;
+                      const minSupTotal=allTotals.length>0?Math.min(...allTotals):0;
+                      const botVal=minSupTotal>0?minSupTotal*0.92:(bpTotal>0?bpTotal*0.75:topVal*0.7);
+                      const yMax=topVal,yMin=Math.max(0,botVal),yRange=yMax-yMin||1;
                       const toY=p=>PT+iH-((p-yMin)/yRange)*iH;
                       const toX=t=>PL+(t/(durMin||1))*iW;
                       const rawStep=(yMax-yMin)/4,mag=Math.pow(10,Math.floor(Math.log10(rawStep||1)));
@@ -2763,7 +2804,7 @@ const SecLots = ({ auction, update }) => {
                           {/* eAuction Preview */}
                           <div style={{ marginBottom:4 }}>
                             <div style={{ display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:8 }}>
-                              <span style={{ fontSize:12,fontWeight:600,color:C.t3,textTransform:"uppercase",letterSpacing:"0.08em" }}>eAuction Preview</span>
+                              <span style={{ fontSize:12,fontWeight:500,color:C.t2,textTransform:"uppercase",letterSpacing:"0.07em" }}>eAuction Preview</span>
                               {suppliersWithTotal.length>0 && (
                                 <div style={{ display:"flex",gap:12 }}>
                                   {suppliersWithTotal.map((s,si)=>{
@@ -2792,12 +2833,10 @@ const SecLots = ({ auction, update }) => {
                                         <text x={PL-5} y={toY(p)+4} textAnchor="end" fontSize={10} fill={C.t3}>{fmtV(p)}</text>
                                       </g>
                                     ))}
-                                    {/* Shaded area */}
-                                    {bpTotal>0&&floorTotal>0&&<rect x={PL} y={toY(bpTotal)} width={iW} height={toY(floorTotal)-toY(bpTotal)} fill="#F0FBF5" opacity={0.7}/>}
+                                    {/* Shaded area between baseline and lowest supplier price */}
+                                    {bpTotal>0&&minSupTotal>0&&<rect x={PL} y={toY(bpTotal)} width={iW} height={toY(minSupTotal)-toY(bpTotal)} fill="#F0FBF5" opacity={0.6}/>}
                                     {/* Baseline — green */}
                                     {bpTotal>0&&(<><line x1={PL} y1={toY(bpTotal)} x2={W-PR} y2={toY(bpTotal)} stroke={C.green} strokeWidth={2}/><text x={PL+8} y={toY(bpTotal)-5} fontSize={10} fontWeight="600" fill={C.green}>Baseline · {cur} {fmtV(bpTotal)}</text></>)}
-                                    {/* Floor */}
-                                    {bpTotal>0&&maxD>0&&(<><line x1={PL} y1={toY(floorTotal)} x2={W-PR} y2={toY(floorTotal)} stroke="#94A3B8" strokeWidth={1.2} strokeDasharray="5,3"/><text x={PL+8} y={toY(floorTotal)+12} fontSize={10} fill={C.t3}>Floor · {cur} {fmtV(floorTotal)}</text></>)}
                                     {/* Supplier ceiling lines — pastel, no text labels */}
                                     {suppliersWithTotal.map((s,si)=>{
                                       const total=getSupTotal(s.id);
@@ -3058,7 +3097,7 @@ const SecLots = ({ auction, update }) => {
                           <div style={{ display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:10 }}>
                             <div style={{ display:"flex",alignItems:"center",gap:8 }}>
                               <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke={C.t3} strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink:0 }}><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-                              <span style={{ fontSize:12,fontWeight:600,color:C.t2,textTransform:"uppercase",letterSpacing:"0.1em" }}>Price Grid</span>
+                              <span style={{ fontSize:12,fontWeight:500,color:C.t2,textTransform:"uppercase",letterSpacing:"0.07em" }}>Price Grid</span>
                               {!hasCeilings && assignedSuppliers.length>0 && (
                                 <span style={{ fontSize:11,color:C.t3 }}>— add ceiling prices in Line Items to see supplier highlights</span>
                               )}
@@ -3126,11 +3165,20 @@ const SecLots = ({ auction, update }) => {
                                             borderTop: isCeilRow&&!isJapanese ? `2px solid ${sg.text}` : "none",
                                             borderBottom2: isCeilRow&&isJapanese ? `2px solid ${sg.text}` : undefined,
                                           }}>
-                                            {rd.adj!==null ? (
+                                            {rd.ref!==null ? (
                                               <>
-                                                <span style={{ fontWeight:isActive?700:400,color:isActive?sg.text:C.t3,fontSize:12 }}>
-                                                  {fmtN(rd.adj)}
-                                                </span>
+                                                {/* Line 1: base round price */}
+                                                <div style={{ fontWeight:isActive?600:400, color:isActive?sg.text:C.t3, fontSize:12 }}>
+                                                  {fmtN(rd.ref)}
+                                                  {dynQty>0 && <span style={{ fontSize:9, fontWeight:400, color:isActive?sg.text:C.grey300, marginLeft:3 }}>{fmtN(rd.ref*dynQty)}</span>}
+                                                </div>
+                                                {/* Line 2: handicap-adjusted price */}
+                                                {sg.hasValue && Math.abs(rd.adj-rd.ref)>0.001 && (
+                                                  <div style={{ fontSize:11, fontWeight:700, marginTop:2, color: rd.adj>rd.ref ? "#DC2626" : "#16A34A" }}>
+                                                    {fmtN(rd.adj)}
+                                                    {dynQty>0 && <span style={{ fontSize:9, fontWeight:400, marginLeft:3 }}>{fmtN(rd.adj*dynQty)}</span>}
+                                                  </div>
+                                                )}
                                                 {isCeilRow && (
                                                   <div style={{ fontSize:9,fontWeight:700,color:sg.text,marginTop:1,textTransform:"uppercase",letterSpacing:"0.05em" }}>
                                                     ceiling
@@ -3207,7 +3255,7 @@ const SecLots = ({ auction, update }) => {
 
                   {/* ── Awarding Principle ── */}
                   <div>
-                    <div style={{ fontSize:11,fontWeight:600,color:C.t3,textTransform:"uppercase",letterSpacing:"0.06em",marginBottom:10 }}>Awarding Principle</div>
+                    <div style={{ fontSize:12,fontWeight:500,color:C.t2,textTransform:"uppercase",letterSpacing:"0.07em",marginBottom:10 }}>Awarding Principle</div>
                     <div style={{ display:"flex",gap:10 }}>
                       {[
                         {v:"lowest", label:"Lowest price wins", sub:"Winner takes all volume"},
@@ -3281,7 +3329,7 @@ const SecLots = ({ auction, update }) => {
 
                     {/* LEFT: Terms */}
                     <div style={{ flex:1,display:"flex",flexDirection:"column",gap:12 }}>
-                      <div style={{ fontSize:11,fontWeight:600,color:C.t3,textTransform:"uppercase",letterSpacing:"0.06em" }}>Terms & Conditions</div>
+                      <div style={{ fontSize:12,fontWeight:500,color:C.t2,textTransform:"uppercase",letterSpacing:"0.07em" }}>Terms & Conditions</div>
                       <Field label="Commercial Terms">
                         <textarea
                           value={lot.commercialTerms||""}
@@ -3302,7 +3350,7 @@ const SecLots = ({ auction, update }) => {
 
                     {/* RIGHT: Documents */}
                     <div style={{ width:220,flexShrink:0,display:"flex",flexDirection:"column",gap:10 }}>
-                      <div style={{ fontSize:11,fontWeight:600,color:C.t3,textTransform:"uppercase",letterSpacing:"0.06em" }}>Documents</div>
+                      <div style={{ fontSize:12,fontWeight:500,color:C.t2,textTransform:"uppercase",letterSpacing:"0.07em" }}>Documents</div>
                       <input type="file" id={fileInputId} multiple accept=".pdf,.doc,.docx,.xls,.xlsx"
                         style={{ display:"none" }}
                         onChange={e=>{ handleFiles(e.target.files); e.target.value=""; }}/>
@@ -3587,197 +3635,392 @@ const LaunchModal = ({ auction, onClose }) => (
   </div>
 );
 
-/* ── Creation Gate ───────────────────────────────────────────────────────── */
-const CreationGate = ({ onSelect }) => {
-  const [hovered, setHovered] = useState(null);
-  const [selected, setSelected] = useState(null);
-  const choose = (mode) => { setSelected(mode); setTimeout(() => onSelect(mode), 300); };
+/* ── Template Modal ──────────────────────────────────────────────────────── */
+const TemplateModal = ({ onClose, onSelect }) => {
+  const [filter, setFilter] = useState("all");
+  const [search, setSearch] = useState("");
+  const [userTemplates, setUserTemplates] = useState(() => loadTemplates());
+  const [hoveredCard, setHoveredCard] = useState(null);
 
-  const scratchBlocks = [
-    { icon: <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke={C.t2} strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>, label: "Architecture", sub: "Auction type & format" },
-    { icon: <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke={C.t2} strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>, label: "Setup", sub: "Timeline & rules" },
-    { icon: <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke={C.t2} strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>, label: "Suppliers", sub: "Invite participants" },
-    { icon: <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke={C.t2} strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>, label: "Lots & Pricing", sub: "Items & price targets" },
+  const all = [
+    ...userTemplates.map(t => ({ ...t, category: "my" })),
+    ...SYSTEM_TEMPLATES,
   ];
+  const filtered = all.filter(t => {
+    if (filter === "my" && t.category !== "my") return false;
+    if (filter === "system" && t.category !== "system") return false;
+    if (search && !t.name.toLowerCase().includes(search.toLowerCase())) return false;
+    return true;
+  });
+
+  const handleDelete = (id, e) => {
+    e.stopPropagation();
+    deleteTemplate(id);
+    setUserTemplates(loadTemplates());
+  };
+
+  const myCount = all.filter(t => t.category === "my").length;
+  const sysCount = all.filter(t => t.category === "system").length;
 
   return (
-    <div style={{ minHeight: "100vh", background: C.bg, display: "flex" }}>
-      <DarkSidebar />
-      <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "48px 24px" }}>
-        <div style={{ width: "100%", maxWidth: 800 }}>
-          <div style={{ marginBottom: 32 }}>
-            <div style={{ fontSize: 12, fontWeight: 600, color: C.t2, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 8 }}>Step 1</div>
-            <div style={{ fontSize: 28, fontWeight: 700, color: C.t1, marginBottom: 6 }}>How would you like to start?</div>
-            <div style={{ fontSize: 14, color: C.t2 }}>Choose a configuration method for your procurement auction.</div>
+    <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.4)", zIndex:1000, display:"flex", alignItems:"center", justifyContent:"center", padding:24 }}
+      onClick={onClose}>
+      <div className="card fade" style={{ maxWidth:780, width:"100%", maxHeight:"85vh", display:"flex", flexDirection:"column", borderRadius:8, overflow:"hidden" }}
+        onClick={e => e.stopPropagation()}>
+
+        {/* Header */}
+        <div style={{ padding:"20px 24px 16px", borderBottom:`1px solid ${C.divider}`, display:"flex", alignItems:"center", gap:12, flexShrink:0 }}>
+          <div style={{ flex:1 }}>
+            <div style={{ fontSize:18, fontWeight:700, color:C.t1, marginBottom:2 }}>Choose a Template</div>
+            <div style={{ fontSize:13, color:C.t2 }}>Start from a pre-configured auction setup</div>
           </div>
+          <input
+            placeholder="Search templates…"
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            style={{ width:200, height:36, fontSize:13 }}
+          />
+          <button onClick={onClose} style={{ background:"none", border:"none", cursor:"pointer", padding:4, color:C.t2, fontSize:20, lineHeight:1, flexShrink:0 }}>×</button>
+        </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+        {/* Filter pills */}
+        <div style={{ padding:"12px 24px 0", display:"flex", gap:8, flexShrink:0 }}>
+          {[
+            { key:"all",    label:`All (${all.length})` },
+            { key:"my",     label:`My templates (${myCount})` },
+            { key:"system", label:`System (${sysCount})` },
+          ].map(pill => (
+            <button key={pill.key} onClick={() => setFilter(pill.key)}
+              style={{ height:32, padding:"0 14px", borderRadius:16, border:`1px solid ${filter===pill.key ? C.t1 : C.divider}`,
+                background: filter===pill.key ? C.t1 : "transparent",
+                color: filter===pill.key ? "#fff" : C.t2,
+                fontSize:13, fontFamily:"Poppins,sans-serif", cursor:"pointer", fontWeight: filter===pill.key ? 600 : 400,
+                transition:"all .15s" }}>
+              {pill.label}
+            </button>
+          ))}
+        </div>
 
-            {/* ── Recommended Card ── */}
-            {(() => {
-              const isSel = selected === "recommended";
-              const isHov = hovered === "recommended";
-              const borderC = isSel ? C.green : isHov ? C.grey200 : C.divider;
-              return (
-                <div onClick={() => choose("recommended")}
-                  onMouseEnter={() => setHovered("recommended")} onMouseLeave={() => setHovered(null)}
-                  style={{ background: C.surface, borderRadius: 8, cursor: "pointer", overflow: "hidden", position: "relative",
-                    display: "flex", flexDirection: "column",
-                    borderTop: `1px solid ${borderC}`, borderRight: `1px solid ${borderC}`, borderBottom: `1px solid ${borderC}`,
-                    borderLeft: `4px solid ${C.green}`,
-                    opacity: selected && !isSel ? 0.5 : 1, transition: "opacity .2s, border-color .15s" }}>
+        {/* Template grid */}
+        <div style={{ flex:1, overflowY:"auto", padding:24 }}>
+          {filtered.length === 0 ? (
+            <div style={{ textAlign:"center", padding:"48px 24px", color:C.t2 }}>
+              <div style={{ fontSize:32, marginBottom:12 }}>📋</div>
+              <div style={{ fontSize:15, fontWeight:600, color:C.t1, marginBottom:6 }}>No templates found</div>
+              <div style={{ fontSize:13 }}>
+                {filter === "my" ? "Save a configuration from the builder to create your first template." : "Try adjusting your search."}
+              </div>
+            </div>
+          ) : (
+            <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:16 }}>
+              {filtered.map(tpl => {
+                const isHov = hoveredCard === tpl.id;
+                return (
+                  <div key={tpl.id}
+                    onMouseEnter={() => setHoveredCard(tpl.id)}
+                    onMouseLeave={() => setHoveredCard(null)}
+                    style={{ borderRadius:8, border:`1px solid ${isHov ? tpl.typeBorder : C.divider}`,
+                      overflow:"hidden", cursor:"pointer", transition:"border-color .15s, box-shadow .15s",
+                      boxShadow: isHov ? "0 2px 12px rgba(0,0,0,0.08)" : "none",
+                      display:"flex", flexDirection:"column" }}>
 
-                  {/* Header */}
-                  <div style={{ padding: "18px 18px 14px" }}>
-                    <div style={{ display: "flex", gap: 12, marginBottom: 14, alignItems: "flex-start" }}>
-                      <div style={{ width: 40, height: 40, borderRadius: 8, background: C.greenLight, border: `1px solid ${C.green}22`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                        <svg width={20} height={20} viewBox="0 0 24 24" fill="none" stroke={C.green} strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    {/* Colored header */}
+                    <div style={{ background: tpl.typeBg, borderBottom:`1px solid ${tpl.typeBorder}`, padding:"12px 14px" }}>
+                      <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:6 }}>
+                        <span style={{ fontSize:11, fontWeight:600, color: tpl.typeColor,
+                          background:`${tpl.typeBorder}66`, padding:"2px 8px", borderRadius:10,
+                          border:`1px solid ${tpl.typeBorder}` }}>
+                          {tpl.auctionType}
+                        </span>
+                        {tpl.category === "my" && (
+                          <button onClick={e => handleDelete(tpl.id, e)}
+                            style={{ background:"none", border:"none", cursor:"pointer", padding:2, color: tpl.typeColor, opacity:0.6, lineHeight:1 }}
+                            title="Delete template">
+                            <svg width={13} height={13} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+                          </button>
+                        )}
                       </div>
-                      <div style={{ flex: 1 }}>
-                        <div style={{ fontSize: 10, fontWeight: 600, color: C.green, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 3 }}>AI Recommendation</div>
-                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
-                          <div style={{ fontSize: 16, fontWeight: 700, color: C.t1, lineHeight: 1.2 }}>English Reverse — Rank</div>
-                          <div style={{ fontSize: 20, fontWeight: 700, color: C.green, lineHeight: 1, marginLeft: 8 }}>86%</div>
+                      <div style={{ fontSize:14, fontWeight:700, color:C.t1, lineHeight:1.3 }}>{tpl.name}</div>
+                    </div>
+
+                    {/* Body */}
+                    <div style={{ padding:"12px 14px", flex:1, background:C.surface }}>
+                      <div style={{ display:"flex", alignItems:"center", gap:6, marginBottom:8 }}>
+                        <span style={{ fontSize:12, color:C.t2 }}>{tpl.lots} lot{tpl.lots !== 1 ? "s" : ""}</span>
+                        {tpl.category === "my" && <span style={{ fontSize:11, color:C.t3 }}>· My template</span>}
+                        {tpl.category === "system" && <span style={{ fontSize:11, color:C.t3 }}>· System</span>}
+                      </div>
+                      <div style={{ fontSize:12, color:C.t2, lineHeight:1.5, marginBottom: tpl.savedAt ? 6 : 0 }}>{tpl.description}</div>
+                      {tpl.savedAt && (
+                        <div style={{ fontSize:11, color:C.t3 }}>
+                          Saved {new Date(tpl.savedAt).toLocaleDateString("en-GB", { day:"numeric", month:"short", year:"numeric" })}
                         </div>
-                        <div style={{ fontSize: 12, color: C.t2, marginTop: 2 }}>System-optimized for your procurement profile</div>
+                      )}
+                    </div>
+
+                    {/* Use button — shown on hover */}
+                    {isHov && (
+                      <div style={{ padding:"10px 14px", borderTop:`1px solid ${tpl.typeBorder}`, background: tpl.typeBg }}>
+                        <button className="btn btn-primary btn-sm" style={{ width:"100%" }}
+                          onClick={() => onSelect(tpl.auction)}>
+                          Use Template →
+                        </button>
                       </div>
-                    </div>
-                    {/* Progress bar */}
-                    <div style={{ height: 4, background: C.greenLight, borderRadius: 2 }}>
-                      <div style={{ height: "100%", width: "86%", background: C.green, borderRadius: 2 }} />
-                    </div>
+                    )}
                   </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
 
-                  {/* Savings */}
-                  <div style={{ padding: "0 18px 14px", display: "flex", alignItems: "center", gap: 8 }}>
-                    <div style={{ background: C.greenLight, color: C.green, fontWeight: 700, fontSize: 12, padding: "3px 8px", borderRadius: 4 }}>+12%</div>
-                    <span style={{ fontSize: 13, color: C.t1 }}>≈ $16,440 <span style={{ color: C.t2, fontWeight: 400 }}>Estimated Savings</span></span>
-                  </div>
+/* ── Save Template Modal ─────────────────────────────────────────────────── */
+const SaveTemplateModal = ({ auction, onClose, onSaved }) => {
+  const [name, setName] = useState(auction.name ? `${auction.name} template` : "");
 
-                  {/* Chart */}
-                  <div style={{ padding: "0 18px", marginBottom: 14 }}>
-                    <div style={{ background: C.bg, border: `1px solid ${C.divider}`, borderRadius: 6, padding: "10px 10px 6px", position: "relative" }}>
-                      <svg viewBox="0 0 300 100" width="100%" style={{ display: "block" }}>
-                        {/* grid */}
-                        {[20,45,70].map(y => <line key={y} x1="10" y1={y} x2="290" y2={y} stroke={C.divider} strokeWidth="0.7" strokeDasharray="4,3"/>)}
-                        {/* green fill zone */}
-                        <path d="M 10 18 L 60 28 L 110 38 L 155 50 L 200 60 L 245 67 L 285 73 L 285 82 L 10 82 Z" fill={C.greenLight} opacity="0.7"/>
-                        {/* B line */}
-                        <polyline points="10,26 60,36 110,46 155,57 200,66 235,75" fill="none" stroke="#c8c8c8" strokeWidth="1.5" strokeLinejoin="round"/>
-                        {[10,60,110,155,200,235].map((x,i,a) => { const ys=[26,36,46,57,66,75]; return <circle key={i} cx={x} cy={ys[i]} r="2.5" fill={C.surface} stroke="#c8c8c8" strokeWidth="1.5"/>; })}
-                        {/* C line */}
-                        <polyline points="10,34 60,44 110,54 155,63 190,74" fill="none" stroke="#b0b0b0" strokeWidth="1.5" strokeLinejoin="round" strokeDasharray="5,3"/>
-                        {[10,60,110,155,190].map((x,i) => { const ys=[34,44,54,63,74]; return <circle key={i} cx={x} cy={ys[i]} r="2.5" fill={C.surface} stroke="#b0b0b0" strokeWidth="1.5"/>; })}
-                        {/* A (winner) line */}
-                        <polyline points="10,18 60,28 110,38 155,50 200,60 245,67 285,73" fill="none" stroke={C.green} strokeWidth="2" strokeLinejoin="round"/>
-                        {[10,60,110,155,200,245].map((x,i) => { const ys=[18,28,38,50,60,67]; return <circle key={i} cx={x} cy={ys[i]} r="3" fill={C.surface} stroke={C.green} strokeWidth="1.5"/>; })}
-                        {/* Winner end circle */}
-                        <circle cx="285" cy="73" r="8" fill={C.green}/>
-                        <polyline points="281,73 284,76 290,69" fill="none" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                        {/* Axis labels */}
-                        <text x="10" y="97" fontSize="8" fill={C.t3}>Start</text>
-                        <text x="256" y="97" fontSize="8" fill={C.t3}>Time →</text>
-                        {/* Legend */}
-                        <circle cx="155" cy="9" r="3" fill={C.green}/><text x="161" y="12" fontSize="7.5" fill={C.t2}>A — wins</text>
-                        <circle cx="205" cy="9" r="3" fill="#c8c8c8"/><text x="211" y="12" fontSize="7.5" fill={C.t2}>B — #2</text>
-                        <circle cx="244" cy="9" r="3" fill="#b0b0b0"/><text x="250" y="12" fontSize="7.5" fill={C.t2}>C — #3</text>
-                      </svg>
-                    </div>
-                  </div>
+  const save = () => {
+    if (!name.trim()) return;
+    const resolved = determineAuctionType(auction);
+    const typeName = resolved?.name || "Auction";
+    const isD = typeName.includes("Dutch");
+    const isJ = typeName.includes("Japanese");
+    const isS = typeName.includes("Sealed");
+    const typeBg     = isD?"#F3F2FF":isJ?"#FEFFEA":isS?"#E9F5FF":"#EBFFF7";
+    const typeBorder = isD?"#C9C7FF":isJ?"#DCF5A0":isS?"#B8DCFA":"#A8F0D8";
+    const typeColor  = isD?"#3D3A90":isJ?"#4A6010":isS?"#1A5080":"#1B7A4A";
+    const tpl = {
+      id: `tpl-${Date.now()}`,
+      name: name.trim(),
+      category: "my",
+      auctionType: typeName,
+      typeBg, typeBorder, typeColor,
+      lots: auction.lots.length,
+      description: `${auction.suppliers.length} supplier${auction.suppliers.length !== 1 ? "s" : ""} · Saved from builder`,
+      savedAt: new Date().toISOString(),
+      auction: { ...auction },
+    };
+    const existing = loadTemplates();
+    saveTemplates([tpl, ...existing]);
+    onSaved();
+    onClose();
+  };
 
-                  {/* Parameters */}
-                  <div style={{ padding: "0 18px", display: "flex", flexDirection: "column", gap: 8, marginBottom: 16, flex: 1 }}>
-                    {[
-                      { label: "Security",   options: ["Pre-bid", "No Pre-bid"], active: 0 },
-                      { label: "Preference", options: ["None", "Financial"],     active: 0 },
-                      { label: "Awarding",   options: ["Award", "Rank"],         active: 1 },
-                    ].map(row => (
-                      <div key={row.label} style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                        <span style={{ fontSize: 12, color: C.t2, width: 76, flexShrink: 0 }}>{row.label}:</span>
-                        {row.options.map((o, i) => (
-                          <span key={o} style={{ fontSize: 12, padding: "2px 10px", borderRadius: 20,
-                            border: `1px solid ${i === row.active ? C.t1 : C.divider}`,
-                            fontWeight: i === row.active ? 600 : 400,
-                            color: i === row.active ? C.t1 : C.t2 }}>{o}</span>
-                        ))}
-                      </div>
-                    ))}
-                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                      <span style={{ fontSize: 12, color: C.t2, width: 76, flexShrink: 0 }}>Intensity:</span>
-                      <div style={{ display: "flex", gap: 3 }}>
-                        {Array.from({ length: 12 }, (_, i) => (
-                          <div key={i} style={{ width: 11, height: 11, borderRadius: "50%", background: i < 9 ? C.green : C.divider }} />
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Footer */}
-                  <div style={{ padding: "12px 18px 18px", borderTop: `1px solid ${C.divider}` }}>
-                    <button className="btn btn-primary" style={{ width: "100%" }} onClick={e => { e.stopPropagation(); choose("recommended"); }}>Build from recommendation</button>
-                  </div>
-                </div>
-              );
-            })()}
-
-            {/* ── Create From Scratch Card ── */}
-            {(() => {
-              const isSel = selected === "scratch";
-              const isHov = hovered === "scratch";
-              const borderC = isSel ? C.green : isHov ? C.grey200 : C.divider;
-              return (
-                <div onClick={() => choose("scratch")}
-                  onMouseEnter={() => setHovered("scratch")} onMouseLeave={() => setHovered(null)}
-                  style={{ background: C.surface, borderRadius: 8, padding: 20, border: `1px solid ${borderC}`,
-                    cursor: "pointer", position: "relative",
-                    display: "flex", flexDirection: "column",
-                    opacity: selected && !isSel ? 0.5 : 1, transition: "opacity .2s, border-color .15s" }}>
-
-                  {isSel && (
-                    <div style={{ position: "absolute", top: 14, right: 14, width: 22, height: 22, borderRadius: "50%", background: C.green, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                      <IcoCheck size={12} />
-                    </div>
-                  )}
-
-                  {/* Header */}
-                  <div style={{ display: "flex", gap: 12, marginBottom: 18, alignItems: "flex-start" }}>
-                    <div style={{ width: 40, height: 40, borderRadius: 8, background: C.bg, border: `1px solid ${C.divider}`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                      <svg width={20} height={20} viewBox="0 0 24 24" fill="none" stroke={C.t2} strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-                    </div>
-                    <div>
-                      <div style={{ fontSize: 10, fontWeight: 600, color: C.t3, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 3 }}>Manual Setup</div>
-                      <div style={{ fontSize: 16, fontWeight: 700, color: C.t1, marginBottom: 2, lineHeight: 1.2 }}>Create From Scratch</div>
-                      <div style={{ fontSize: 12, color: C.t2, lineHeight: 1.5 }}>Full control over every parameter</div>
-                    </div>
-                  </div>
-
-                  {/* Config blocks list */}
-                  <div style={{ display: "flex", flexDirection: "column", gap: 6, marginBottom: 18 }}>
-                    {scratchBlocks.map((b, i) => (
-                      <div key={i} style={{ background: C.bg, border: `1px solid ${C.divider}`, borderRadius: 6, padding: "10px 14px", display: "flex", gap: 12, alignItems: "center" }}>
-                        <div style={{ width: 32, height: 32, borderRadius: 6, background: C.surface, border: `1px solid ${C.divider}`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>{b.icon}</div>
-                        <div>
-                          <div style={{ fontSize: 13, fontWeight: 600, color: C.t1 }}>{b.label}</div>
-                          <div style={{ fontSize: 12, color: C.t2 }}>{b.sub}</div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Spacer to push button down */}
-                  <div style={{ flex: 1 }} />
-
-                  <button className="btn btn-primary" style={{ width: "100%" }} onClick={e => { e.stopPropagation(); choose("scratch"); }}>Build from scratch</button>
-                </div>
-              );
-            })()}
-
+  return (
+    <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.4)", zIndex:1000, display:"flex", alignItems:"center", justifyContent:"center", padding:24 }}
+      onClick={onClose}>
+      <div className="card fade" style={{ maxWidth:400, width:"100%", borderRadius:8, overflow:"hidden" }}
+        onClick={e => e.stopPropagation()}>
+        <div style={{ padding:"20px 24px 16px", borderBottom:`1px solid ${C.divider}` }}>
+          <div style={{ fontSize:16, fontWeight:700, color:C.t1, marginBottom:2 }}>Save as Template</div>
+          <div style={{ fontSize:13, color:C.t2 }}>Save this configuration for future reuse</div>
+        </div>
+        <div style={{ padding:"20px 24px" }}>
+          <div style={{ marginBottom:16 }}>
+            <label style={{ fontSize:13, fontWeight:500, color:C.t1, display:"block", marginBottom:6 }}>Template name</label>
+            <input
+              value={name}
+              onChange={e => setName(e.target.value)}
+              onKeyDown={e => { if (e.key === "Enter") save(); if (e.key === "Escape") onClose(); }}
+              placeholder="e.g. My IT Hardware Template"
+              autoFocus
+              style={{ width:"100%" }}
+            />
+          </div>
+          <div style={{ display:"flex", gap:8, justifyContent:"flex-end" }}>
+            <button className="btn btn-secondary" onClick={onClose}>Cancel</button>
+            <button className="btn btn-primary" onClick={save} disabled={!name.trim()}>Save Template</button>
           </div>
         </div>
       </div>
     </div>
   );
 };
+
+/* ── Creation Gate ───────────────────────────────────────────────────────── */
+const CreationGate = ({ onSelectType, onFromTemplate, onFromScratch }) => {
+  const [expanded, setExpanded] = useState(null);
+  const [showTemplates, setShowTemplates] = useState(false);
+
+  const TYPE_CARDS = [
+    {
+      key: "english",
+      label: "English Auction",
+      desc: "Competitive live bidding — suppliers see activity and outbid each other in real time.",
+      typeBg: "#EBFFF7", typeBorder: "#A8F0D8", typeColor: "#1B7A4A",
+      auction: { type:"simple", biddingMode:"english", archRankVisible: true },
+      icon: (
+        <svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke="#1B7A4A" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
+          <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/>
+        </svg>
+      ),
+    },
+    {
+      key: "dutch",
+      label: "Dutch Auction",
+      desc: "Price increases each round during competitive multi-round bidding.",
+      typeBg: "#F3F2FF", typeBorder: "#C9C7FF", typeColor: "#3D3A90",
+      auction: { type:"dynamic", dynamicFormat:"dutch", archPriceDirection:"dutch" },
+      icon: (
+        <svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke="#3D3A90" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
+          <polyline points="22 17 13.5 8.5 8.5 13.5 2 7"/><polyline points="16 17 22 17 22 11"/>
+        </svg>
+      ),
+    },
+    {
+      key: "japanese",
+      label: "Japanese Auction",
+      desc: "Price decreases each round until a supplier accepts the offer.",
+      typeBg: "#FEFFEA", typeBorder: "#DCF5A0", typeColor: "#4A6010",
+      auction: { type:"dynamic", dynamicFormat:"japanese", archPriceDirection:"japanese" },
+      icon: (
+        <svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke="#4A6010" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
+          <line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/>
+        </svg>
+      ),
+    },
+    {
+      key: "sealed",
+      label: "Sealed Bid",
+      desc: "Suppliers submit one blind bid without seeing competitors. Best price wins.",
+      typeBg: "#E9F5FF", typeBorder: "#B8DCFA", typeColor: "#1A5080",
+      auction: { type:"simple", biddingMode:"sealed" },
+      icon: (
+        <svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke="#1A5080" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/>
+        </svg>
+      ),
+    },
+  ];
+
+  return (
+    <>
+    <div style={{ minHeight:"100vh", background:C.bg, display:"flex" }}>
+      <DarkSidebar />
+      <div style={{ flex:1, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", padding:"48px 24px" }}>
+        <div style={{ width:"100%", maxWidth:820 }}>
+
+          {/* Header */}
+          <div style={{ marginBottom:32 }}>
+            <div style={{ fontSize:12, fontWeight:600, color:C.t2, textTransform:"uppercase", letterSpacing:"0.1em", marginBottom:8 }}>New eAuction</div>
+            <div style={{ fontSize:28, fontWeight:700, color:C.t1, marginBottom:6 }}>Start building your auction</div>
+            <div style={{ fontSize:14, color:C.t2 }}>Select an auction type to pre-configure the builder, or start from scratch.</div>
+          </div>
+
+          {/* Top: Choose Auction Type */}
+          <div className="card" style={{ marginBottom:16, padding:"20px 20px 16px", borderRadius:8 }}>
+            <div style={{ fontSize:11, fontWeight:700, color:C.t2, textTransform:"uppercase", letterSpacing:"0.08em", marginBottom:14 }}>Choose Auction Type</div>
+            <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:12 }}>
+              {TYPE_CARDS.map(tc => {
+                const isExp = expanded === tc.key;
+                return (
+                  <div key={tc.key}
+                    onClick={() => setExpanded(isExp ? null : tc.key)}
+                    style={{ borderRadius:8, border:`1px solid ${isExp ? tc.typeBorder : C.divider}`,
+                      background: isExp ? tc.typeBg : C.surface,
+                      cursor:"pointer", transition:"all .15s",
+                      overflow:"hidden" }}>
+                    <div style={{ padding:"14px 14px 12px", display:"flex", alignItems:"flex-start", gap:10 }}>
+                      <div style={{ width:34, height:34, borderRadius:8,
+                        background: isExp ? `${tc.typeBorder}55` : C.bg,
+                        border:`1px solid ${isExp ? tc.typeBorder : C.divider}`,
+                        display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}>
+                        {tc.icon}
+                      </div>
+                      <div style={{ flex:1, minWidth:0 }}>
+                        <div style={{ fontSize:13, fontWeight:700, color: isExp ? tc.typeColor : C.t1, lineHeight:1.2, marginBottom:2 }}>{tc.label}</div>
+                        {isExp && (
+                          <div style={{ fontSize:12, color:C.t2, lineHeight:1.5, marginTop:4 }}>{tc.desc}</div>
+                        )}
+                      </div>
+                      <div style={{ flexShrink:0, marginTop:2 }}>
+                        {isExp
+                          ? <IcoCheck size={14} color={tc.typeColor} />
+                          : <svg width={12} height={12} viewBox="0 0 24 24" fill="none" stroke={C.t3} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                        }
+                      </div>
+                    </div>
+                    {isExp && (
+                      <div style={{ padding:"0 14px 14px" }}>
+                        <button className="btn btn-primary btn-sm" style={{ width:"100%" }}
+                          onClick={e => { e.stopPropagation(); onSelectType({ ...INIT, ...tc.auction }); }}>
+                          Start building →
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Bottom row: From Template + From Scratch */}
+          <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:16 }}>
+
+            {/* From Template */}
+            <div className="card" style={{ borderRadius:8, padding:20, cursor:"pointer", transition:"border-color .15s",
+              display:"flex", alignItems:"center", gap:16 }}
+              onClick={() => setShowTemplates(true)}
+              onMouseEnter={e => e.currentTarget.style.borderColor = C.grey200}
+              onMouseLeave={e => e.currentTarget.style.borderColor = C.divider}>
+              <div style={{ width:44, height:44, borderRadius:10, background:"#FFF5EB",
+                border:"1px solid #FFD0A0", display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}>
+                <svg width={20} height={20} viewBox="0 0 24 24" fill="none" stroke="#8C2300" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+                  <polyline points="14 2 14 8 20 8"/>
+                  <line x1="16" y1="13" x2="8" y2="13"/>
+                  <line x1="16" y1="17" x2="8" y2="17"/>
+                  <polyline points="10 9 9 9 8 9"/>
+                </svg>
+              </div>
+              <div style={{ flex:1 }}>
+                <div style={{ fontSize:15, fontWeight:700, color:C.t1, marginBottom:3 }}>From Template</div>
+                <div style={{ fontSize:13, color:C.t2 }}>Choose from saved or system templates</div>
+              </div>
+              <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke={C.t3} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink:0 }}>
+                <polyline points="9 18 15 12 9 6"/>
+              </svg>
+            </div>
+
+            {/* From Scratch */}
+            <div className="card" style={{ borderRadius:8, padding:20, cursor:"pointer", transition:"border-color .15s",
+              display:"flex", alignItems:"center", gap:16 }}
+              onClick={onFromScratch}
+              onMouseEnter={e => e.currentTarget.style.borderColor = C.grey200}
+              onMouseLeave={e => e.currentTarget.style.borderColor = C.divider}>
+              <div style={{ width:44, height:44, borderRadius:10, background:C.bg,
+                border:`1px solid ${C.divider}`, display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}>
+                <svg width={20} height={20} viewBox="0 0 24 24" fill="none" stroke={C.t2} strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                </svg>
+              </div>
+              <div style={{ flex:1 }}>
+                <div style={{ fontSize:15, fontWeight:700, color:C.t1, marginBottom:3 }}>From Scratch</div>
+                <div style={{ fontSize:13, color:C.t2 }}>Full control over every parameter</div>
+              </div>
+              <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke={C.t3} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink:0 }}>
+                <polyline points="9 18 15 12 9 6"/>
+              </svg>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    {showTemplates && (
+      <TemplateModal
+        onClose={() => setShowTemplates(false)}
+        onSelect={(tplAuction) => { setShowTemplates(false); onFromTemplate(tplAuction); }}
+      />
+    )}
+    </>
+  );
+};
+
 
 /* ── ROOT APP ────────────────────────────────────────────────────────────── */
 export default function App() {
@@ -3788,8 +4031,17 @@ export default function App() {
   const [activeId, setActiveId] = useState("arch");
   const scrollRef = useRef(null);
 
+  const [showSaveTemplate, setShowSaveTemplate] = useState(false);
+
   const update = (ch) => setAuction(prev => ({ ...prev, ...ch }));
-  const enterBuilder = (mode) => { update({ creationMode: mode }); setPhase("builder"); };
+  const enterBuilder = (mode, initialAuction = null) => {
+    if (initialAuction) {
+      setAuction({ ...initialAuction, creationMode: mode });
+    } else {
+      setAuction({ ...INIT, creationMode: mode });
+    }
+    setPhase("builder");
+  };
 
   const isFormValid = useMemo(() => {
     const a = auction;
@@ -3842,7 +4094,13 @@ export default function App() {
     return () => observers.forEach(o => o.disconnect());
   }, [phase]);
 
-  if (phase === "gate") return <CreationGate onSelect={enterBuilder} />;
+  if (phase === "gate") return (
+    <CreationGate
+      onSelectType={(typeAuction) => enterBuilder("type", { ...INIT, ...typeAuction })}
+      onFromTemplate={(tplAuction) => enterBuilder("template", tplAuction)}
+      onFromScratch={() => enterBuilder("scratch")}
+    />
+  );
 
   const _resolved = determineAuctionType(auction);
   const auctionLabel = _resolved ? `${_resolved.family} · ${_resolved.name}` : "eAuction";
@@ -3865,6 +4123,10 @@ export default function App() {
             <div style={{ fontSize: 12, color: C.t2 }}>{auctionLabel}</div>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <button className="btn btn-secondary" onClick={() => setShowSaveTemplate(true)}
+              style={{ display:"flex", alignItems:"center", gap:5 }}>
+              📋 Save as template
+            </button>
             <button className="btn btn-secondary" style={{ display: "flex", alignItems: "center", gap: 5 }}>
               <IcoSave size={14} /> Save draft
             </button>
@@ -3898,6 +4160,13 @@ export default function App() {
       </div>
 
       {launched && <LaunchModal auction={auction} onClose={() => setLaunched(false)} />}
+      {showSaveTemplate && (
+        <SaveTemplateModal
+          auction={auction}
+          onClose={() => setShowSaveTemplate(false)}
+          onSaved={() => {}}
+        />
+      )}
     </div>
   );
 }

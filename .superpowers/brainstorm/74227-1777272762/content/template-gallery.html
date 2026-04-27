@@ -1,0 +1,161 @@
+<h2>Список темплейтів — як він виглядає?</h2>
+<p class="subtitle">Два варіанти — як показати збережені темплейти після кліку "From Template"</p>
+
+<div class="cards" style="grid-template-columns:1fr; gap:24px; max-width:960px; margin:0 auto;">
+
+  <!-- Option A: Modal/overlay over gate -->
+  <div class="card" data-choice="a" onclick="toggleSelect(this)" style="padding:0;overflow:hidden;">
+    <div class="card-body" style="padding:14px 18px 10px;">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+        <div class="letter" style="width:26px;height:26px;font-size:12px;flex-shrink:0;">A</div>
+        <h3 style="margin:0;font-size:14px;">Модальне вікно поверх першого екрану</h3>
+      </div>
+      <p style="margin:0;font-size:11px;color:#888;">Клік "From Template" → відкривається попап з галереєю</p>
+    </div>
+    <div style="background:#f8f8f6;border-top:1px solid #eee;padding:16px 18px;">
+      <!-- Simulated modal -->
+      <div style="background:#fff;border:1px solid #ddd;border-radius:10px;box-shadow:0 8px 32px rgba(0,0,0,0.12);overflow:hidden;">
+        <!-- Modal header -->
+        <div style="padding:14px 18px;border-bottom:1px solid #eee;display:flex;align-items:center;justify-content:space-between;">
+          <div>
+            <div style="font-size:14px;font-weight:700;color:#111;">Choose a Template</div>
+            <div style="font-size:11px;color:#888;margin-top:2px;">7 templates available</div>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <input style="border:1px solid #e0e0dc;border-radius:4px;padding:5px 10px;font-size:11px;width:160px;" placeholder="Search templates..."/>
+            <div style="color:#aaa;cursor:pointer;font-size:16px;">✕</div>
+          </div>
+        </div>
+        <!-- Filter tabs -->
+        <div style="padding:8px 18px;display:flex;gap:6px;border-bottom:1px solid #eee;background:#fafaf8;">
+          <div style="background:#111;color:#fff;border-radius:20px;padding:3px 10px;font-size:10px;font-weight:600;">All (7)</div>
+          <div style="background:#fff;border:1px solid #e0e0dc;border-radius:20px;padding:3px 10px;font-size:10px;color:#555;">My templates (3)</div>
+          <div style="background:#fff;border:1px solid #e0e0dc;border-radius:20px;padding:3px 10px;font-size:10px;color:#555;">Team (2)</div>
+          <div style="background:#fff;border:1px solid #e0e0dc;border-radius:20px;padding:3px 10px;font-size:10px;color:#555;">System (2)</div>
+        </div>
+        <!-- Template grid -->
+        <div style="padding:14px 18px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px;">
+          <!-- Template cards -->
+          <div style="border:1px solid #e0e0dc;border-radius:7px;overflow:hidden;cursor:pointer;">
+            <div style="background:#EBFFF7;padding:10px 12px;border-bottom:1px solid #A8F0D8;">
+              <div style="font-size:9px;color:#1B7A4A;font-weight:600;text-transform:uppercase;">English · My template</div>
+              <div style="font-size:12px;font-weight:700;color:#111;margin-top:3px;">IT Hardware 2024</div>
+            </div>
+            <div style="padding:8px 12px;">
+              <div style="font-size:10px;color:#666;display:flex;flex-direction:column;gap:3px;">
+                <div>📦 3 lots · 5 suppliers</div>
+                <div>💰 Baseline: $45,000</div>
+                <div style="color:#aaa;font-size:9px;margin-top:2px;">Saved 3 days ago</div>
+              </div>
+            </div>
+          </div>
+          <div style="border:1px solid #e0e0dc;border-radius:7px;overflow:hidden;cursor:pointer;">
+            <div style="background:#E9F5FF;padding:10px 12px;border-bottom:1px solid #B8DCFA;">
+              <div style="font-size:9px;color:#1A5080;font-weight:600;text-transform:uppercase;">Sealed Bid · Team</div>
+              <div style="font-size:12px;font-weight:700;color:#111;margin-top:3px;">Consulting Services</div>
+            </div>
+            <div style="padding:8px 12px;">
+              <div style="font-size:10px;color:#666;display:flex;flex-direction:column;gap:3px;">
+                <div>📦 1 lot · 8 suppliers</div>
+                <div>💰 Baseline: $120,000</div>
+                <div style="color:#aaa;font-size:9px;margin-top:2px;">Saved 1 week ago</div>
+              </div>
+            </div>
+          </div>
+          <div style="border:1px solid #e0e0dc;border-radius:7px;overflow:hidden;cursor:pointer;">
+            <div style="background:#F3F2FF;padding:10px 12px;border-bottom:1px solid #C9C7FF;">
+              <div style="font-size:9px;color:#3D3A90;font-weight:600;text-transform:uppercase;">Dutch · System</div>
+              <div style="font-size:12px;font-weight:700;color:#111;margin-top:3px;">Goods Procurement</div>
+            </div>
+            <div style="padding:8px 12px;">
+              <div style="font-size:10px;color:#666;display:flex;flex-direction:column;gap:3px;">
+                <div>📦 5 lots · —</div>
+                <div>💰 Configurable</div>
+                <div style="color:#aaa;font-size:9px;margin-top:2px;">System default</div>
+              </div>
+            </div>
+          </div>
+          <div style="border:1px solid #e0e0dc;border-radius:7px;overflow:hidden;cursor:pointer;">
+            <div style="background:#FEFFEA;padding:10px 12px;border-bottom:1px solid #DCF5A0;">
+              <div style="font-size:9px;color:#4A6010;font-weight:600;text-transform:uppercase;">Japanese · My template</div>
+              <div style="font-size:12px;font-weight:700;color:#111;margin-top:3px;">Annual Goods Q1</div>
+            </div>
+            <div style="padding:8px 12px;">
+              <div style="font-size:10px;color:#666;display:flex;flex-direction:column;gap:3px;">
+                <div>📦 2 lots · 4 suppliers</div>
+                <div>💰 Baseline: $80,000</div>
+                <div style="color:#aaa;font-size:9px;margin-top:2px;">Saved 2 weeks ago</div>
+              </div>
+            </div>
+          </div>
+          <div style="border:2px dashed #e0e0dc;border-radius:7px;display:flex;align-items:center;justify-content:center;min-height:88px;cursor:pointer;">
+            <div style="text-align:center;color:#aaa;">
+              <div style="font-size:18px;">+</div>
+              <div style="font-size:10px;margin-top:2px;">Save current as template</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:8px;font-size:10px;color:#999;">✓ Не залишає першу сторінку &nbsp;·&nbsp; ✓ Пошук і фільтри &nbsp;·&nbsp; ✓ Категорії: мої / команда / системні</div>
+    </div>
+  </div>
+
+  <!-- Option B: Inline expansion -->
+  <div class="card" data-choice="b" onclick="toggleSelect(this)" style="padding:0;overflow:hidden;">
+    <div class="card-body" style="padding:14px 18px 10px;">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+        <div class="letter" style="width:26px;height:26px;font-size:12px;flex-shrink:0;">B</div>
+        <h3 style="margin:0;font-size:14px;">Inline розгортання під кнопкою</h3>
+      </div>
+      <p style="margin:0;font-size:11px;color:#888;">Клік "From Template" → секція розгортається прямо на сторінці</p>
+    </div>
+    <div style="background:#f8f8f6;border-top:1px solid #eee;padding:16px 18px;">
+      <div style="font-size:11px;display:flex;flex-direction:column;gap:8px;">
+        <!-- Type selection (collapsed) -->
+        <div style="background:#fff;border:1px solid #e0e0dc;border-radius:6px;padding:10px;opacity:0.6;">
+          <div style="font-size:10px;color:#aaa;text-transform:uppercase;margin-bottom:6px;">Choose auction type</div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:5px;">
+            <div style="background:#EBFFF7;border-radius:4px;padding:5px;text-align:center;font-size:10px;font-weight:600;color:#1B7A4A;">English</div>
+            <div style="background:#F3F2FF;border-radius:4px;padding:5px;text-align:center;font-size:10px;font-weight:600;color:#3D3A90;">Dutch</div>
+            <div style="background:#FEFFEA;border-radius:4px;padding:5px;text-align:center;font-size:10px;font-weight:600;color:#4A6010;">Japanese</div>
+            <div style="background:#E9F5FF;border-radius:4px;padding:5px;text-align:center;font-size:10px;font-weight:600;color:#1A5080;">Sealed</div>
+          </div>
+        </div>
+        <!-- Templates expanded -->
+        <div style="background:#fff;border:2px solid #111;border-radius:6px;padding:12px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+            <div style="font-size:11px;font-weight:700;color:#111;">📋 From Template</div>
+            <div style="display:flex;gap:4px;">
+              <div style="background:#f5f5f3;border-radius:20px;padding:2px 8px;font-size:9px;color:#555;border:1px solid #e0e0dc;">My (3)</div>
+              <div style="background:#f5f5f3;border-radius:20px;padding:2px 8px;font-size:9px;color:#555;border:1px solid #e0e0dc;">Team (2)</div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:5px;">
+            <div style="display:flex;align-items:center;gap:8px;padding:7px 10px;border:1px solid #e0e0dc;border-radius:5px;cursor:pointer;">
+              <div style="width:8px;height:8px;background:#EBFFF7;border:1px solid #A8F0D8;border-radius:2px;flex-shrink:0;"></div>
+              <div style="flex:1;"><span style="font-weight:600;font-size:11px;color:#111;">IT Hardware 2024</span> <span style="color:#aaa;font-size:10px;">· English · 3 lots</span></div>
+              <div style="font-size:9px;color:#aaa;">3d ago</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;padding:7px 10px;border:1px solid #e0e0dc;border-radius:5px;cursor:pointer;">
+              <div style="width:8px;height:8px;background:#E9F5FF;border:1px solid #B8DCFA;border-radius:2px;flex-shrink:0;"></div>
+              <div style="flex:1;"><span style="font-weight:600;font-size:11px;color:#111;">Consulting Services</span> <span style="color:#aaa;font-size:10px;">· Sealed · 1 lot</span></div>
+              <div style="font-size:9px;color:#aaa;">1w ago</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;padding:7px 10px;border:1px solid #e0e0dc;border-radius:5px;cursor:pointer;">
+              <div style="width:8px;height:8px;background:#FEFFEA;border:1px solid #DCF5A0;border-radius:2px;flex-shrink:0;"></div>
+              <div style="flex:1;"><span style="font-weight:600;font-size:11px;color:#111;">Annual Goods Q1</span> <span style="color:#aaa;font-size:10px;">· Japanese · 2 lots</span></div>
+              <div style="font-size:9px;color:#aaa;">2w ago</div>
+            </div>
+          </div>
+        </div>
+        <!-- Scratch collapsed -->
+        <div style="background:#fff;border:1px solid #e0e0dc;border-radius:6px;padding:10px;opacity:0.6;display:flex;align-items:center;gap:8px;">
+          <span style="font-size:14px;">⚙️</span>
+          <div style="font-size:11px;font-weight:600;color:#333;">From Scratch</div>
+        </div>
+      </div>
+      <div style="margin-top:8px;font-size:10px;color:#999;">✓ Все в одному місці &nbsp;·&nbsp; ✓ Менше кліків &nbsp;·&nbsp; ✗ Сторінка може бути довгою</div>
+    </div>
+  </div>
+
+</div>

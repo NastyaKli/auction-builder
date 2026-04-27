@@ -1,0 +1,168 @@
+<h2>Дизайн панелі Preview — два режими</h2>
+<p class="subtitle">Клікни щоб вибрати який варіант тобі більше подобається для кожного типу</p>
+
+<!-- SINGLE ROUND -->
+<div class="section">
+  <h3 style="margin-bottom:4px;">Single Round (English / Sealed Bid)</h3>
+  <p class="subtitle" style="margin-bottom:16px;">Що показувати коли один раунд?</p>
+
+  <div class="options">
+    <div class="option" data-choice="single-chart" onclick="toggleSelect(this)">
+      <div class="letter">A</div>
+      <div class="content">
+        <h3>SVG Лінійний графік</h3>
+        <p>Показує ціновий діапазон для кожного постачальника протягом тривалості аукціону</p>
+        <div style="background:#fff;border:1px solid #e5e7eb;border-radius:8px;padding:16px;margin-top:10px;">
+          <div style="display:flex;align-items:center;gap:16px;margin-bottom:12px;flex-wrap:wrap;">
+            <span style="font-size:10px;font-weight:700;color:#787878;text-transform:uppercase;letter-spacing:.08em;">eAuction Preview</span>
+            <span style="font-size:11px;color:#555;margin-left:auto;">Sealed Bid · 5 min · Baseline: 100,000</span>
+          </div>
+          <!-- Fake SVG chart -->
+          <div style="position:relative;background:#fafafa;border:1px solid #f0f0f0;border-radius:6px;padding:12px 16px 24px 48px;height:140px;">
+            <!-- Y labels -->
+            <div style="position:absolute;left:4px;top:12px;font-size:10px;color:#aaa;">100k</div>
+            <div style="position:absolute;left:4px;top:50px;font-size:10px;color:#aaa;">80k</div>
+            <div style="position:absolute;left:4px;top:88px;font-size:10px;color:#aaa;">60k</div>
+            <!-- Grid lines -->
+            <div style="position:absolute;left:48px;right:16px;top:24px;height:1px;background:#f0f0f0;"></div>
+            <div style="position:absolute;left:48px;right:16px;top:62px;height:1px;background:#f0f0f0;"></div>
+            <div style="position:absolute;left:48px;right:16px;top:100px;height:1px;background:#f0f0f0;"></div>
+            <!-- SVG fake lines -->
+            <svg style="position:absolute;left:48px;right:16px;top:12px;width:calc(100% - 64px);height:116px;" viewBox="0 0 300 116">
+              <!-- Supplier 1 line (green, declining) -->
+              <polyline points="0,10 60,30 120,52 180,70 240,88 300,100" fill="none" stroke="#00CE7C" stroke-width="2" stroke-linejoin="round"/>
+              <circle cx="0" cy="10" r="3" fill="#00CE7C"/>
+              <circle cx="300" cy="100" r="3" fill="#00CE7C"/>
+              <!-- Supplier 2 line (blue, declining less) -->
+              <polyline points="0,20 60,38 120,55 180,72 240,85 300,95" fill="none" stroke="#1A49A9" stroke-width="2" stroke-linejoin="round"/>
+              <circle cx="0" cy="20" r="3" fill="#1A49A9"/>
+              <circle cx="300" cy="95" r="3" fill="#1A49A9"/>
+              <!-- Baseline dashed -->
+              <line x1="0" y1="10" x2="300" y2="10" stroke="#e5e7eb" stroke-width="1" stroke-dasharray="4,4"/>
+            </svg>
+            <!-- X labels -->
+            <div style="position:absolute;bottom:6px;left:48px;font-size:10px;color:#aaa;">0</div>
+            <div style="position:absolute;bottom:6px;left:50%;font-size:10px;color:#aaa;">2.5 min</div>
+            <div style="position:absolute;bottom:6px;right:12px;font-size:10px;color:#aaa;">5 min</div>
+          </div>
+          <!-- Legend -->
+          <div style="display:flex;gap:16px;margin-top:10px;">
+            <span style="font-size:11px;color:#555;display:flex;align-items:center;gap:5px;"><span style="width:12px;height:2px;background:#00CE7C;display:inline-block;border-radius:1px;"></span>Supplier 1</span>
+            <span style="font-size:11px;color:#555;display:flex;align-items:center;gap:5px;"><span style="width:12px;height:2px;background:#1A49A9;display:inline-block;border-radius:1px;"></span>Supplier 2</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="option" data-choice="single-stats" onclick="toggleSelect(this)">
+      <div class="letter">B</div>
+      <div class="content">
+        <h3>Статистична картка</h3>
+        <p>Мінімальна ціна, потенційна економія, статус постачальників — без графіка</p>
+        <div style="background:#fff;border:1px solid #e5e7eb;border-radius:8px;padding:16px;margin-top:10px;">
+          <div style="font-size:10px;font-weight:700;color:#787878;text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px;">eAuction Preview · Sealed Bid</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:12px;">
+            <div style="background:#f0fdf4;border-radius:6px;padding:10px;text-align:center;">
+              <div style="font-size:18px;font-weight:700;color:#16a34a;">100,000</div>
+              <div style="font-size:10px;color:#787878;margin-top:2px;">Baseline price</div>
+            </div>
+            <div style="background:#eff6ff;border-radius:6px;padding:10px;text-align:center;">
+              <div style="font-size:18px;font-weight:700;color:#1A49A9;">5 min</div>
+              <div style="font-size:10px;color:#787878;margin-top:2px;">Duration</div>
+            </div>
+            <div style="background:#fafafa;border-radius:6px;padding:10px;text-align:center;">
+              <div style="font-size:18px;font-weight:700;color:#1D1D1B;">3</div>
+              <div style="font-size:10px;color:#787878;margin-top:2px;">Suppliers</div>
+            </div>
+          </div>
+          <div style="font-size:11px;color:#787878;">1 bid per supplier · No ranking visible · Blind format</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MULTI ROUND -->
+<div class="section" style="margin-top:32px;">
+  <h3 style="margin-bottom:4px;">Multi-Round Dynamic (Japanese / Dutch)</h3>
+  <p class="subtitle" style="margin-bottom:16px;">Таблиця раундів — автоматично розрахована</p>
+
+  <div class="options">
+    <div class="option" data-choice="multi-table" onclick="toggleSelect(this)">
+      <div class="letter">C</div>
+      <div class="content">
+        <h3>Price Grid таблиця (як у прикладі)</h3>
+        <p>Round / Reference / Supplier 1 / Supplier 2... — з хандікапами, авторозрахунок раундів</p>
+        <div style="background:#fff;border:1px solid #e5e7eb;border-radius:8px;padding:16px;margin-top:10px;overflow-x:auto;">
+          <div style="font-size:10px;font-weight:700;color:#787878;text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;">Price Grid · 5 rounds · Dutch (↑)</div>
+          <table style="width:100%;border-collapse:collapse;font-size:12px;">
+            <thead>
+              <tr style="border-bottom:2px solid #e5e7eb;">
+                <th style="padding:6px 10px;text-align:left;color:#787878;font-weight:600;">Round</th>
+                <th style="padding:6px 10px;text-align:right;color:#787878;font-weight:600;">Reference</th>
+                <th style="padding:6px 10px;text-align:right;color:#16a34a;font-weight:600;">● Crown <span style="color:#999;font-weight:400;">(-15%)</span></th>
+                <th style="padding:6px 10px;text-align:right;color:#1A49A9;font-weight:600;">● Nastya S. <span style="color:#999;font-weight:400;">(+30%)</span></th>
+                <th style="padding:6px 10px;text-align:right;color:#9F580A;font-weight:600;">● Supplier 1</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom:1px solid #f0f0f0;background:#fafafa;">
+                <td style="padding:6px 10px;font-weight:600;color:#1D1D1B;">1 <span style="font-size:10px;color:#aaa;font-weight:400;">floor</span></td>
+                <td style="padding:6px 10px;text-align:right;color:#aaa;">200,000</td>
+                <td style="padding:6px 10px;text-align:right;font-weight:700;">230,000 <span style="color:#ef4444;font-size:10px;">+30k</span></td>
+                <td style="padding:6px 10px;text-align:right;font-weight:700;">140,000 <span style="color:#16a34a;font-size:10px;">-60k</span></td>
+                <td style="padding:6px 10px;text-align:right;font-weight:700;">200,000</td>
+              </tr>
+              <tr style="border-bottom:1px solid #f0f0f0;">
+                <td style="padding:6px 10px;font-weight:600;color:#1D1D1B;">2</td>
+                <td style="padding:6px 10px;text-align:right;color:#aaa;">250,000</td>
+                <td style="padding:6px 10px;text-align:right;font-weight:700;">287,500 <span style="color:#ef4444;font-size:10px;">+37.5k</span></td>
+                <td style="padding:6px 10px;text-align:right;font-weight:700;">175,000 <span style="color:#16a34a;font-size:10px;">-75k</span></td>
+                <td style="padding:6px 10px;text-align:right;font-weight:700;">250,000</td>
+              </tr>
+              <tr style="border-bottom:1px solid #f0f0f0;background:#fafafa;">
+                <td style="padding:6px 10px;font-weight:600;color:#1D1D1B;">3</td>
+                <td style="padding:6px 10px;text-align:right;color:#aaa;">300,000</td>
+                <td style="padding:6px 10px;text-align:right;font-weight:700;">345,000 <span style="color:#ef4444;font-size:10px;">+45k</span></td>
+                <td style="padding:6px 10px;text-align:right;font-weight:700;">210,000 <span style="color:#16a34a;font-size:10px;">-90k</span></td>
+                <td style="padding:6px 10px;text-align:right;font-weight:700;">300,000</td>
+              </tr>
+              <tr style="background:#fffbeb;">
+                <td style="padding:6px 10px;font-weight:600;color:#1D1D1B;">4 <span style="font-size:10px;color:#aaa;font-weight:400;">ceiling</span></td>
+                <td style="padding:6px 10px;text-align:right;color:#aaa;">350,000</td>
+                <td style="padding:6px 10px;text-align:right;font-weight:700;">402,500 <span style="color:#ef4444;font-size:10px;">+52.5k</span></td>
+                <td style="padding:6px 10px;text-align:right;font-weight:700;">245,000 <span style="color:#16a34a;font-size:10px;">-105k</span></td>
+                <td style="padding:6px 10px;text-align:right;font-weight:700;">350,000</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="option" data-choice="multi-chart-table" onclick="toggleSelect(this)">
+      <div class="letter">D</div>
+      <div class="content">
+        <h3>Графік + Таблиця (tabs)</h3>
+        <p>Перемикач між графіком ліній та таблицею раундів</p>
+        <div style="background:#fff;border:1px solid #e5e7eb;border-radius:8px;padding:16px;margin-top:10px;">
+          <div style="display:flex;gap:0;border:1px solid #e5e7eb;border-radius:6px;overflow:hidden;width:fit-content;margin-bottom:12px;">
+            <div style="padding:5px 14px;background:#1D1D1B;color:#fff;font-size:12px;font-weight:600;">📈 Chart</div>
+            <div style="padding:5px 14px;background:#fff;color:#787878;font-size:12px;">🔢 Table</div>
+          </div>
+          <!-- fake chart for dynamic -->
+          <div style="position:relative;background:#fafafa;border:1px solid #f0f0f0;border-radius:6px;padding:8px 12px 20px 44px;height:100px;">
+            <svg style="width:100%;height:80px;" viewBox="0 0 300 80">
+              <polyline points="0,70 75,52 150,34 225,18 300,4" fill="none" stroke="#00CE7C" stroke-width="2"/>
+              <polyline points="0,60 75,46 150,32 225,18 300,6" fill="none" stroke="#1A49A9" stroke-width="2"/>
+              <polyline points="0,65 75,49 150,33 225,18 300,4" fill="none" stroke="#9F580A" stroke-width="2"/>
+            </svg>
+            <div style="position:absolute;bottom:4px;left:44px;font-size:9px;color:#aaa;">Round 1</div>
+            <div style="position:absolute;bottom:4px;right:8px;font-size:9px;color:#aaa;">Round 4</div>
+          </div>
+          <div style="font-size:11px;color:#aaa;margin-top:8px;text-align:center;">Dutch auction · ціна зростає кожен раунд</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
